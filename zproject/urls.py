@@ -23,6 +23,7 @@ import zerver.views.home
 import zerver.views.registration
 import zerver.views.zephyr
 import zerver.views.users
+import zerver.views.export
 import zerver.views.unsubscribe
 import zerver.views.integrations
 import zerver.views.user_settings
@@ -412,6 +413,10 @@ urls += [
         name='zerver.views.auth.api_fetch_google_client_id'),
 ]
 
+#Export user data
+urls += [
+    url(r'^export_user_data', zerver.views.export.export_single_user, name='zerver.views.export.export_single_user'),
+]
 # Include URL configuration files for site-specified extra installed
 # Django apps
 for app_name in settings.EXTRA_INSTALLED_APPS:
