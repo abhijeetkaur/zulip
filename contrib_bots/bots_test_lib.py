@@ -44,10 +44,17 @@ class BotTestCase(TestCase):
             for (message, response) in zip(messages, bot_response):
                 # Send message to the concerned bot
                 message_handler.handle_message(message, MockClass(), StateHandler())
-
-                # Check if BotHandlerApi is sending a reply message.
-                # This can later be modified to assert the contents of BotHandlerApi.send_message
-                instance.send_reply.assert_called_with(message, response)
+                # There are 2 functions of the BotHandlerApi that the bot may call.
+                # It can call 'send_reply' function or the 'send_message' function for
+                # a given message.
+                try:
+                    # Check if the bot is sending a reply message.
+                    # 'response' is a string here.
+                    instance.send_reply.assert_called_with(message, response)
+                except AssertionError:
+                    # Check if the bot is sending a message via `send_message` function.
+                    # Where response is a dictionary here.
+                    instance.send_message.assert_called_with(response)
 
     def bot_to_run(self, bot_module):
         # Returning Any, same argument as in mock_test function.
