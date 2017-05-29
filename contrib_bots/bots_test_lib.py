@@ -8,7 +8,7 @@ import sys
 import requests
 import unittest
 import requests_mock
-
+import mock
 from mock import MagicMock, patch
 
 from run import get_lib_module
@@ -47,8 +47,11 @@ class BotTestCase(TestCase):
             for (message, response) in zip(messages, bot_response):
                 # Send message to the concerned bot
                 if http_request is not None:
-                    with patch('giphy.requests') as m:
-                        m.get.return_value = response
+                    with patch('requests.get') as mock_get:
+                        mock_result = mock.MagicMock()
+                        mock_result.json.return_value = response
+                        mock_result.ok.return_value = True
+                        mock_get.return_value = mock_result
 
                         message_handler.handle_message(message, MockClass(), StateHandler())
                         # There are 2 functions of the BotHandlerApi that the bot may call.
@@ -57,7 +60,7 @@ class BotTestCase(TestCase):
                         try:
                             # Check if the bot is sending a reply message.
                             # 'response' is a string here.
-                            instance.send_reply.assert_called_with(message, response)
+                            instance.send_reply.assert_called_with(message, "https://media4.giphy.com/media/3o6ZtpxSZbQRRnwCKQ/giphy.gif")
                         except AssertionError:
                             # Check if the bot is sending a message via `send_message` function.
                             # Where response is a dictionary here.

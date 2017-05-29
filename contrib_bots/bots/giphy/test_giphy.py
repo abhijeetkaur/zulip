@@ -26,7 +26,7 @@ class TestGiphyBot(BotTestCase):
         }
         self.assert_bot_output(
             {'content': "Hello", 'type': "private", 'sender_email': "foo_sender@zulip.com"},
-            json.dumps(response_json),
+            response_json,
             {'api_url': giphy.GIPHY_TRANSLATE_API, 'params': {'s': "Hello", 'api_key': giphy.get_giphy_api_key_from_config()}}
         )
        
