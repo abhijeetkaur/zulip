@@ -57,6 +57,7 @@ def get_url_gif_giphy(keyword, api_key):
              'api_key': api_key}
     try:
         data = requests.get(GIPHY_TRANSLATE_API, params=query)
+        print(data)
     except requests.exceptions.ConnectionError as e:  # Usually triggered by bad connection.
         logging.warning(e)
         raise
